@@ -9,7 +9,7 @@ module Moves
   MOVESETS = { king: MOVESET_Q, queen: MOVESET_Q, bishop: MOVESET_B, 
                rook: MOVESET_R, knight: MOVESET_H }
 
-  def move
+  def compute_moves
     moves = []
     board.each_index do |y|
       board[y].each_index do |x|
