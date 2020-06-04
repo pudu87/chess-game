@@ -16,6 +16,7 @@ RSpec.describe Board do
   end
 
   describe "#show" do
+    before { subject.taken = %w[bP wP wP bH bR wR wQ bP wP bP wH] }
     it "shows a game board" do
       expect(STDOUT).to receive(:puts).exactly(:once)
       expect(subject).to receive(:print).at_least(64).times
@@ -25,24 +26,28 @@ RSpec.describe Board do
 
   describe "#insert" do
     it "moves a piece to an empty spot" do
-      subject.insert([[0,0],[1,0]])
+      subject.move = [[0,0],[1,0]]
+      subject.insert
       expect(subject.board[0][0]).to be_nil
       expect(subject.board[1][0]).to eql('bR')
     end
     it "moves a piece to an occupied spot" do
-      subject.insert([[0,0],[3,0]])
+      subject.move = [[0,0],[3,0]]
+      subject.insert
       expect(subject.board[0][0]).to be_nil
       expect(subject.board[3][0]).to eql('bR')
       expect(subject.taken[-1]).to eql('wP')
     end
     it "performs castling" do
-      subject.insert([[0,4],[0,2],[0,0],[0,3]])
+      subject.move = [[0,4],[0,2],[0,0],[0,3]]
+      subject.insert
       expect(subject.board[0][0]).to be_nil
       expect(subject.board[0][2]).to eql('bK')
       expect(subject.board[0][3]).to eql('bR')
     end
     it "performs an en-passant" do
-      subject.insert([[3,7],[2,6],[3,6],nil])
+      subject.move = [[3,7],[2,6],[3,6],nil]
+      subject.insert
       expect(subject.board[3][7]).to be_nil
       expect(subject.board[3][6]).to be_nil
       expect(subject.board[2][6]).to eql('wP')
@@ -62,7 +67,7 @@ RSpec.describe Board do
 
   describe "#valid_move?" do
     before do 
-      n_board = subject.board
+      temp_board = subject.board
       subject.player = 'b'
     end
     it "returns true if move is possible" do
@@ -90,13 +95,11 @@ RSpec.describe Board do
     before { subject.player = 'b' }
     it "returns true if a player is in check" do
       allow(subject).to receive(:compute_moves).and_return([[[1,0], [0,0]], [[1,0], [0,1]], [[2,5], [0,4]]])
-      n_board = subject.board
-      expect(subject.check?(n_board)).to be_truthy
+      expect(subject.check?(subject.board)).to be_truthy
     end
     it "returns false if a player is not in check" do
       allow(subject).to receive(:compute_moves).and_return([[[1,0], [0,0]], [[1,0], [0,1]]])
-      n_board = subject.board
-      expect(subject.check?(n_board)).not_to be_truthy
+      expect(subject.check?(subject.board)).not_to be_truthy
     end
   end
 
@@ -104,28 +107,12 @@ RSpec.describe Board do
     it "returns true if there is a stalemate" do
       allow(subject).to receive(:compute_moves).and_return([[[0,0], [0,1]], [[0,0], [0,1]], [[0,0], [0,2]]])
       allow(subject).to receive(:valid_move?).exactly(3).times.and_return(false, false, false)
-      expect(subject.stalemate?('b')).to be_truthy
+      expect(subject.stalemate?).to be_truthy
     end
     it "returns false if there is no stalemate" do
       allow(subject).to receive(:compute_moves).and_return([[[0,0], [0,1]], [[0,0], [0,1]], [[0,0], [0,2]]])
       allow(subject).to receive(:valid_move?).exactly(3).times.and_return(false, false, true)
-      expect(subject.stalemate?('b')).not_to be_truthy
-    end
-  end
-
-  describe "#checkmate?" do
-    before { subject.player = 'b' }
-    it "returns true if there is a checkmate" do
-      allow(subject).to receive(:compute_moves).and_return([[[0,0], [0,1]], [[0,0], [0,1]], [[0,0], [0,2]]])
-      allow(subject).to receive(:check?).and_return(true)
-      allow(subject).to receive(:valid_move?).exactly(3).times.and_return(false, false, false)
-      expect(subject.checkmate?).to be_truthy
-    end
-    it "returns false if there is no checkmate" do
-      allow(subject).to receive(:compute_moves).and_return([[[0,0], [0,1]], [[0,0], [0,1]], [[0,0], [0,2]]])
-      allow(subject).to receive(:check?).and_return(false)
-      allow(subject).to receive(:valid_move?).exactly(3).times.and_return(false, false, false)
-      expect(subject.checkmate?).not_to be_truthy
+      expect(subject.stalemate?).not_to be_truthy
     end
   end
   
