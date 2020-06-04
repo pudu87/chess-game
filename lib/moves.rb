@@ -73,7 +73,7 @@ module Moves
 
   def castling(xy, moves)
     { -1 => 0, 1 => 7 }.each do |k, r|
-      if !moved?(xy, r) && !pieces_in_between?(xy, k) && !under_attack?(xy, k)
+      unless moved?(xy, r) || pieces_in_between?(xy, k)
         moves << [xy, [xy[0], xy[1] + k*2], [xy[0], r], [xy[0], xy[1] + k]]
       end
     end
@@ -86,13 +86,6 @@ module Moves
   def pieces_in_between?(xy, k)
     k < 0 ? board[xy[0]][xy[1]-1] || board[xy[0]][xy[1]-2] || board[xy[0]][xy[1]-3] :
             board[xy[0]][xy[1]+1] || board[xy[0]][xy[1]+2]
-  end
-
-  def under_attack?(xy, k)
-    #TODO: APPLY CASTLING_LOOP_PARAMETER for CHECK?()
-    n_board = Marshal.load(Marshal.dump(board))
-    n_board[xy[0]][xy[1]+k] = "#{player}K"
-    check?(n_board, player)
   end
 
   def forward_move(xy, moves, s)

@@ -75,9 +75,13 @@ RSpec.describe Board do
       allow(subject).to receive(:check?).and_return(true)
       expect(subject.valid_move?([[0,4], [0,5]])).not_to be_truthy
     end
-    it "returns false if move is not allowed" do
+    it "returns false if castling move with squares under attack" do
+      allow(subject).to receive(:compute_moves).and_return([[0,4],[0,6],[0,7],[0,5]])
+      allow(subject).to receive(:check?).and_return(false, true, false)
+      expect(subject.valid_move?([[0,4],[0,6]])).not_to be_truthy
+    end
+    it "returns false if move is not computed" do
       allow(subject).to receive(:compute_moves).and_return([[[0,4], [0,5]]])
-      allow(subject).to receive(:check?).and_return(true)
       expect(subject.valid_move?([[0,0], [0,1]])).not_to be_truthy
     end
   end

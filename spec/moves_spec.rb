@@ -27,14 +27,13 @@ RSpec.describe Moves do
 
   describe "#compute_moves" do
     it "returns all possible moves for black" do
-      allow(dummy).to receive(:check?).and_return(false,true)
       dummy.player = 'b'
       dummy.history = [[[6,1],[4,1]]]
       expect(dummy.compute_moves).to match_array(
         [ [[0,0],[0,1]], [[0,0],[0,2]], [[0,0],[0,3]], [[0,0],[1,0]], 
             [[0,0],[2,0]], [[0,0],[3,0]],
           [[0,4],[0,5]], [[0,4],[1,5]], [[0,4],[1,3]], [[0,4],[0,3]], 
-            [[0,4],[0,2],[0,0],[0,3]],
+            [[0,4],[0,2],[0,0],[0,3]], [[0,4],[0,6],[0,7],[0,5]],
           [[0,7],[1,7]], [[0,7],[2,7]], [[0,7],[3,7]], [[0,7],[0,6]], 
             [[0,7],[0,5]],
           [[1,4],[2,4]], [[1,4],[3,4]],
@@ -90,9 +89,8 @@ RSpec.describe Moves do
   describe "#king" do
     before { dummy.player = 'b' }
     it "returns all possible moves for a king" do
-      allow(dummy).to receive(:check?).and_return(false, true)
       expect(dummy.king([0,4])).to match_array([[[0,4],[0,3]], [[0,4],[1,3]], 
-        [[0,4],[1,5]], [[0,4],[0,5]], [[0,4],[0,2],[0,0],[0,3]]])
+        [[0,4],[1,5]], [[0,4],[0,5]], [[0,4],[0,2],[0,0],[0,3]], [[0,4],[0,6],[0,7],[0,5]]])
     end
     it "does not allow castling if the king already moved" do
       dummy.history = [[[7,0],[7,1]], [[0,3],[0,4]], [[7,1],[7,0]]]
@@ -100,10 +98,9 @@ RSpec.describe Moves do
         [[0,4],[1,5]], [[0,4],[0,5]]])
     end
     it "does not allow castling if there are pieces in between" do
-      allow(dummy).to receive(:check?).and_return(true)
       dummy.board[0][2] = 'bB'
       expect(dummy.king([0,4])).to match_array([[[0,4],[0,3]], [[0,4],[1,3]], 
-        [[0,4],[1,5]], [[0,4],[0,5]]])
+        [[0,4],[1,5]], [[0,4],[0,5]], [[0,4],[0,6],[0,7],[0,5]]])
     end
   end
 
