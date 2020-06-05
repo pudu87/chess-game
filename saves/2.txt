@@ -1,0 +1,73 @@
+---
+:board:
+- - bR
+  - bH
+  - bB
+  - bQ
+  - bK
+  - bB
+  - bH
+  - bR
+- - bP
+  - bP
+  - bP
+  - bP
+  - bP
+  - bP
+  - bP
+  - bP
+- - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+- - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+- - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+- - 
+  - 
+  - wH
+  - 
+  - 
+  - 
+  - 
+  - 
+- - wP
+  - wP
+  - wP
+  - wP
+  - wP
+  - wP
+  - wP
+  - wP
+- - wR
+  - 
+  - wB
+  - wQ
+  - wK
+  - wB
+  - wH
+  - wR
+:history:
+- - - 7
+    - 1
+  - - 5
+    - 2
+:taken: []
+:player: b
