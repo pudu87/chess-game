@@ -29,6 +29,7 @@ module Save
     board.taken = status[:taken]
     board.player = status[:player]
     @player = status[:player]
+    @players = status[:players]
   end
 
   def save
@@ -36,7 +37,7 @@ module Save
     file_nr = 1
     file_nr += 1 while saves.include?(file_nr)
     status = { board: board.board, history: board.history, 
-                taken: board.taken, player: player }
+                taken: board.taken, player: player, players: players }
     File.open("./saves/#{file_nr}.txt", 'w') { |f| f.write(YAML::dump(status)) }
     puts "Game saved as '#{file_nr}.txt'---You can continue the current game now:"
   end

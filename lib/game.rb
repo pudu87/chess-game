@@ -4,20 +4,22 @@ require_relative 'save.rb'
 class Game
   include Save
 
-  attr_accessor :board, :player, :saves
+  attr_accessor :board, :player, :players, :saves
   
   def initialize
     @board = Board.new
     @player = 'w'
+    @players = {}
     @saves = []
   end
 
   def game
     intro
     load
+    player_assignment
     board.show
     loop do
-      input
+      players[player.to_sym] == 'H' ? human_input : computer_input
       board.show
       switch_player
       board.player = player
@@ -28,7 +30,7 @@ class Game
     end
   end
 
-  def input
+  def human_input
     board.check? ? check_message : input_intro
     loop do
       pick = gets.chomp.upcase
@@ -41,11 +43,25 @@ class Game
     board.insert
   end
 
+  def computer_input
+    board.check? ? check_message : input_intro
+    pick = board.compute_moves.sample until board.valid_move?(pick)
+    board.insert
+  end
+
   def switch_player
     player == 'b' ? @player = 'w' : @player = 'b'
   end
 
   private
+
+  def player_assignment
+    puts "Select the player type for each color: (H = Human, C = Computer)"
+    puts "White player is a..."
+    players[:w] = gets.chomp.upcase until ['H', 'C'].include?(players[:w])
+    puts "Black player is a..."
+    players[:b] = gets.chomp.upcase until ['H', 'C'].include?(players[:b])
+  end
 
   def valid_syntax?(pick)
     pick =~ /^[A-H][1-8]\s[A-H][1-8]$/
@@ -55,8 +71,8 @@ class Game
     puts "\n\n--\u2654--\u2655--\u2656--\u2657--\u2658--\u2659--CHESS--"\
       "\u265F--\u265E--\u265D--\u265C--\u265B--\u265A--\n\n"
     puts "When it's your turn, please insert start and end coordinates\n"\
-      "of your preferred move, seperated by a space. E.g. 'B8 C6'.\n"\
-      "Insert 'save' when you want to save your game."    
+      "of your preferred move, seperated by a space. E.g. B8 C6.\n"\
+      "Insert 'save' when you want to save your game.\n\n"
   end
 
   def checkmate_outro
