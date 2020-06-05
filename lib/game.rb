@@ -1,15 +1,20 @@
 require_relative 'board.rb'
+require_relative 'save.rb'
 
 class Game
-  attr_accessor :board, :player
+  include Save
+
+  attr_accessor :board, :player, :saves
   
   def initialize
     @board = Board.new
     @player = 'w'
+    @saves = []
   end
 
   def game
     intro
+    load
     board.show
     loop do
       input
@@ -27,6 +32,7 @@ class Game
     board.check? ? check_message : input_intro
     loop do
       pick = gets.chomp.upcase
+      next save if pick.upcase == 'SAVE'
       next syntax_error_message unless valid_syntax?(pick)
       pick = [[8-pick[1].to_i, pick[0].ord-65], [8-pick[-1].to_i, pick[-2].ord-65]]
       next move_error_message unless board.valid_move?(pick)
@@ -49,7 +55,8 @@ class Game
     puts "\n\n--\u2654--\u2655--\u2656--\u2657--\u2658--\u2659--CHESS--"\
       "\u265F--\u265E--\u265D--\u265C--\u265B--\u265A--\n\n"
     puts "When it's your turn, please insert start and end coordinates\n"\
-      "of your preferred move, seperated by a space. E.g. 'B8 C6'.\n"    
+      "of your preferred move, seperated by a space. E.g. 'B8 C6'.\n"\
+      "Insert 'save' when you want to save your game."    
   end
 
   def checkmate_outro
