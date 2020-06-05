@@ -37,6 +37,8 @@ class Board
       print "| #{8-i}"
       print "       #{SHOW[taken[i]]}" if taken[i]
       print "   #{SHOW[taken[i+8]]}" if taken[i+8]
+      print "   #{SHOW[taken[i+16]]}" if taken[i+16]
+      print "   #{SHOW[taken[i+24]]}" if taken[i+24]
     end
     print "\n   "
     8.times { print " ---" }
