@@ -91,7 +91,8 @@ module Moves
   def forward_move(xy, moves, s)
     unless board[xy[0] + 1*s][xy[1]]
       moves << [xy, [xy[0] + 1*s, xy[1]]]
-      unless board[xy[0] + 2*s][xy[1]] || xy[0] + 2.5*s != 3.5
+      unless board[xy[0] + 2*s][xy[1]] || history.any? { |m| m.include?(xy) }
+        #xy[0] + 2.5*s != 3.5
         moves << [xy, [xy[0] + 2*s, xy[1]]]
       end
     end

@@ -28,7 +28,7 @@ RSpec.describe Moves do
   describe "#compute_moves" do
     it "returns all possible moves for black" do
       dummy.player = 'b'
-      dummy.history = [[[6,1],[4,1]]]
+      dummy.history = [[[1,6],[3,6]], [[7,6],[7,7]], [[3,2],[4,2]], [[6,1],[4,1]]]
       expect(dummy.compute_moves).to match_array(
         [ [[0,0],[0,1]], [[0,0],[0,2]], [[0,0],[0,3]], [[0,0],[1,0]], 
             [[0,0],[2,0]], [[0,0],[3,0]],
@@ -46,6 +46,8 @@ RSpec.describe Moves do
       )
     end
     it "returns all possible moves for white" do
+      dummy.history = [[[4,0],[3,0]], [[0,0],[0,1]], [[7,4],[6,4]], [[1,0],[0,0]], 
+        [[4,7],[3,7]], [[2,6],[3,6]]]
       expect(dummy.compute_moves).to match_array(
         [ [[3,0],[2,0]], [[3,0],[2,1]],
           [[3,7],[2,7]],
